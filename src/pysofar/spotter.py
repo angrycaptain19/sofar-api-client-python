@@ -224,13 +224,11 @@ class Spotter:
         track_data = _data['track']
         freq_data = _data['frequencyData']
 
-        results = {
+        return {
             'wave': wave_data[-1] if len(wave_data) > 0 else None,
             'tracking': track_data[-1] if len(track_data) > 0 else None,
             'frequency': freq_data[-1] if len(freq_data) > 0 else None
         }
-
-        return results
 
     def grab_data(self, limit: int = 20,
                   start_date: str = None, end_date: str = None,
@@ -276,6 +274,4 @@ class Spotter:
         _query.interpolate_utc(interpolate_utc)
         _query.interpolate_period_seconds(interpolate_period_seconds)
 
-        _data = _query.execute()
-
-        return _data
+        return _query.execute()
