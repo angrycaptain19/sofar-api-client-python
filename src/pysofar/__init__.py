@@ -16,10 +16,7 @@ def get_token():
     userpath = os.path.expanduser("~")
     enviromentFile = os.path.join(userpath, 'sofar_api.env')
     dotenv.load_dotenv(enviromentFile)
-    token = os.getenv('WF_API_TOKEN')
-    _wavefleet_token = token
-
-    return _wavefleet_token
+    return os.getenv('WF_API_TOKEN')
 
 
 def get_endpoint():

@@ -108,9 +108,7 @@ class SofarApi(SofarConnection):
         if scode != 200:
             raise QueryError(results['message'])
 
-        data = results['data']
-
-        return data
+        return results['data']
 
     def get_sensor_data(self, spotter_id: str, start_date: str, end_date: str):
         """
@@ -133,9 +131,7 @@ class SofarApi(SofarConnection):
         if scode != 200:
             raise QueryError(results['message'])
 
-        data = results['data']
-
-        return data
+        return results['data']
 
     def update_spotter_name(self, spotter_id, new_spotter_name):
         """
@@ -253,9 +249,7 @@ class SofarApi(SofarConnection):
         if scode != 200:
             raise QueryError(data['message'])
 
-        _spotters = data['data']['devices']
-
-        return _spotters
+        return data['data']['devices']
 
     def _device_radius(self):
         # helper function to access the device radius endpoint
@@ -264,9 +258,7 @@ class SofarApi(SofarConnection):
         if status_code != 200:
             raise QueryError(data['message'])
 
-        spot_data = data['data']['devices']
-
-        return spot_data
+        return data['data']['devices']
 
     def _get_all_data(self, worker_names: list, start_date: str = None, end_date: str = None, params: dict = None):
         # helper function to return another function used for grabbing all data from spotters in a period
@@ -277,8 +269,7 @@ class SofarApi(SofarConnection):
             st = start_date or '2000-01-01T00:00:00.000Z'
             end = end_date or datetime.utcnow()
 
-            _wrker = worker_wrapper((_name, _ids, st, end, params))
-            return _wrker
+            return worker_wrapper((_name, _ids, st, end, params))
 
         # processing the data_types in parallel
         pool = ThreadPool(processes=len(worker_names))
@@ -471,7 +462,7 @@ class WaveDataQuery(SofarConnection):
             del self._params['endDate']
 
     def __str__(self):
-        s = f"Query for {self.spotter_id} \n" +\
+        return f"Query for {self.spotter_id} \n" +\
             f"  Start: {self.start_date or 'From Beginning'} \n" +\
             f"  End: {self.end_date or 'Til Present'} \n" +\
             "  Params:\n" +\
@@ -482,8 +473,6 @@ class WaveDataQuery(SofarConnection):
             f"    track: {self._params['includeTrack']} \n" +\
             f"    frequency: {self._params['includeFrequencyData']} \n" +\
             f"    directional_moments: {self._params['includeDirectionalMoments']} \n"
-
-        return s
 
 
 # ---------------------------------- Util Functions -------------------------------------- #
@@ -550,7 +539,7 @@ def worker_wrapper(args):
     # unwrap list of lists
     worker_data = list(chain(*worker_data))
 
-    if len(worker_data) > 0:
+    if worker_data:
         worker_data.sort(key=lambda x: x['timestamp'])
 
     return worker_data
